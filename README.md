@@ -28,7 +28,7 @@ This Spring Boot application provides a RESTful API for managing products. It in
   - **404 Not Found:** If no products are found for the specified category.
 
 **Response Example:**
-```json
+json
 [
   {
     "id": 5,
@@ -47,7 +47,7 @@ This Spring Boot application provides a RESTful API for managing products. It in
     "image": "https://example.com/image2.jpg"
   }
 ]
-**Add a New Product**
+## Add a New Product 
 URL: /api/products/add
 Method: POST
 Description: Adds a new product to the Fake Store API and saves it to the local database.
@@ -58,7 +58,7 @@ description (string): The description of the product.
 category (string): The category of the product.
 image (string): The URL of the product image.
 Request Body Example:
-```json
+json
 
 {
   "title": "New Product",
@@ -72,7 +72,7 @@ Response:
 400 Bad Request: If the request body is invalid.
 Response Example:
 
-```json
+json
 
 {
   "id": 31,
