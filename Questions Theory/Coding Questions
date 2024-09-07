@@ -1,0 +1,52 @@
+Coding Questions
+
+Question: What are the key things you would consider when creating/consuming an API to ensure that it is secure and reliable? (In coding)
+
+   When build or consuming an API, ensuring security and reliability is crucial.
+
+   1. Security :-> 
+
+      - Authentication and Authorization:
+
+           API Keys/Bearer Tokens: Securely manage API keys or bearer tokens used for authentication. Ensure they are not hardcoded in the codebase or exposed in version control.
+           OAuth: For more complex scenarios, consider using OAuth for secure and scalable authorization.
+
+      - Input Validation:
+      
+           Sanitize Inputs: Validate and sanitize all inputs to avoid injection attacks and ensure data integrity.
+           Parameter Constraints: Implement constraints and checks on query parameters, request bodies, and path variables.                  
+      
+      - Error Handling:
+
+           Avoid Detailed Error Messages: Avoid exposing internal server errors or stack traces to end users. Provide generic error messages while logging detailed errors internally.
+      
+      - HTTPS:
+
+           Secure Communication: Always use HTTPS for secure communication between clients and your API. This encrypts data transmitted over the network.
+
+      - CORS:
+           
+           Cross-Origin Resource Sharing (CORS): Configure CORS settings to control which domains can access your API, helping prevent unauthorized cross-origin requests.
+
+
+    
+   2. Reliability :->
+   
+
+      - Error Handling and Logging:
+ 					
+ 				Graceful Error Handling: Implement robust error handling to manage unexpected situations and failures. Return meaningful HTTP status codes and error messages.
+				Logging: Use logging to capture and diagnose errors, performance issues, and other operational metrics.
+
+	 -  Monitoring and Alerts:
+	            
+	            Application Monitoring: Use monitoring tools to track API performance, health, and usage. Set up alerts for critical issues such as high error rates or performance degradation.
+
+	 - Testing:
+
+	            Unit and Integration Testing: Write comprehensive tests for your API endpoints to ensure they work correctly and handle edge cases.
+	            Load Testing: Perform load testing to evaluate how the API handles high traffic and to identify potential bottlenecks.
+
+	 - Documentation:
+
+	            API Documentation: Provide clear and comprehensive documentation for your API, including usage examples, endpoint descriptions, and response formats. Tools like Swagger (OpenAPI) can help with automated documentation.                        	

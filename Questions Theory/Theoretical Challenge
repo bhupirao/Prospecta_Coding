@@ -1,0 +1,99 @@
+Theoretical Challenge
+ 
+ Suppose you have a CSV file with the data below.
+
+A1: 5, A2: 7, A3: 9, B1: 3, B2: 8, B3: =4+5, C1: =5+A1, C2: =A2+B2, C3: =C2+B3
+
+This can be represented in an excel sheet below:
+
+|  | A | B | C |
+| --- | --- | --- | --- |
+| 1 | 5 | 3 | =5+A1 |
+| 2 | 7 | 8 | =A2+B2 |
+| 3 | 9 | =4+5 | =C2+B3 |
+
+I want a program that will take the CSV input above and produce CSV output with the results.  If
+
+it is a value, then return a value.  If it is a formula then calculate the formula and return the
+
+value of that formula.
+
+1. How will you tackle the challenge above?
+
+2. What type of errors you would you check for?
+
+3. How might a user break your code?
+
+
+1 --> 
+ 
+     - Read the CSV File:
+              
+               :> Use a library to read the CSV file into a 2D array.
+
+               :> Open the input CSV file
+				  Read all rows and columns into a 2D array
+				  Close the CSV file
+     
+     - Extract Values and Store in Map: 
+ 				
+ 				:> Iterate over each cell:
+						- If the cell contains a formula (starts with "="), keep it for later evaluation.
+						- If the cell contains a numeric value, store it in a map with its cell reference as the key.
+				:> Create an empty map to store cell values
+						For each cell in the CSV:
+    							If cell starts with "=":
+        						Store it as a formula
+    					  Otherwise:
+        					    Try to convert the cell value to a number
+        				  If successful:
+                                Add the value to the map with the cell reference as key
+                                Handle any errors in conversion
+     
+     - Evaluate Formulas: 
+
+                :> Iterate over each cell again:
+                        - If the cell contains a formula, replace cell references in the formula with actual values from the map.
+                        - Evaluate the formula and store the result back in the cell.
+
+                :> For each cell in the CSV:
+                         If cell starts with "=":
+                             Extract the formula part
+                         Replace cell references with their actual values
+                             Evaluate the formula
+                         Update the cell with the result
+                             Store the result in the map for future reference
+
+     - Write Results to a New CSV File:
+                
+                :> Use a library to write the updated 2D array to a new CSV file.
+
+                :> Open the output CSV file
+				   Write the updated 2D array to the file
+				   Close the output CSV file
+
+2 --> 
+       
+    - Syntax Errors in Formulas: Ensure formulas are correctly formatted.
+    - Invalid Cell References: Validate that cell references are correct and within bounds.
+    - Division by Zero: Handle division by zero in formulas.
+    - Circular References: Detect circular dependencies between formulas.
+    - Non-Numeric Values: Ensure formulas do not contain invalid values.
+
+
+3 --> 
+    - Malformed CSV Files: If the CSV file is improperly formatted or contains unexpected values.
+    - Complex Formulas: If users input complex formulas or unsupported operations.
+    - Large Files: Large files might exceed memory or processing limits.
+    - Non-Numeric Data: Including non-numeric data in formulas or cells can cause errors.
+
+       
+
+
+                         
+        
+
+		
+
+
+    
