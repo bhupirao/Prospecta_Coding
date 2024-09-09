@@ -88,7 +88,116 @@ value of that formula.
     - Non-Numeric Data: Including non-numeric data in formulas or cells can cause errors.
 
        
+CSV Implementation Code
 
+import com.opencsv.CSVReader;
+import com.opencsv.CSVWriter;
+
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class CSVProcessor {
+
+    private static final Pattern CELL_REFERENCE_PATTERN = Pattern.compile("([A-Z][0-9]+)");
+
+    public static void main(String[] args) {
+        String inputFile = "input.csv";
+        String outputFile = "output.csv";
+
+        try {
+            processCSV(inputFile, outputFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void processCSV(String inputFile, String outputFile) throws IOException {
+        // Read CSV data
+        CSVReader reader = new CSVReader(new FileReader(inputFile));
+        String[] nextLine;
+        String[][] data = reader.readAll().toArray(new String[0][]);
+        reader.close();
+
+        // Store cell values in a map
+        Map<String, Double> values = new HashMap<>();
+        int rows = data.length;
+        int cols = data[0].length;
+
+        // First pass to extract values
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                String cell = data[i][j];
+                if (cell.startsWith("=")) {
+                    // It's a formula, store it for later evaluation
+                    data[i][j] = cell;
+                } else {
+                    // It's a value
+                    try {
+                        double value = Double.parseDouble(cell);
+                        values.put(getCellKey(j, i), value);
+                    } catch (NumberFormatException e) {
+                        // Handle non-numeric values if necessary
+                    }
+                }
+            }
+        }
+
+        // Second pass to evaluate formulas
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                String cell = data[i][j];
+                if (cell.startsWith("=")) {
+                    // Evaluate the formula
+                    double result = evaluateExpression(cell.substring(1), values);
+                    data[i][j] = String.valueOf(result);
+                    values.put(getCellKey(j, i), result);
+                }
+            }
+        }
+
+        // Write results to a new CSV file
+        CSVWriter writer = new CSVWriter(new FileWriter(outputFile));
+        writer.writeAll(java.util.Arrays.asList(data));
+        writer.close();
+    }
+
+    private static String getCellKey(int col, int row) {
+        return (char) ('A' + col) + (row + 1);
+    }
+
+    private static double evaluateExpression(String expression, Map<String, Double> values) {
+        Matcher matcher = CELL_REFERENCE_PATTERN.matcher(expression);
+        StringBuffer sb = new StringBuffer();
+        while (matcher.find()) {
+            String cellKey = matcher.group();
+            Double value = values.get(cellKey);
+            if (value != null) {
+                matcher.appendReplacement(sb, value.toString());
+            } else {
+                matcher.appendReplacement(sb, "0");
+            }
+        }
+        matcher.appendTail(sb);
+        // Use JavaScript engine or custom evaluator for more complex expressions
+        return eval(sb.toString());
+    }
+
+    private static double eval(String expression) {
+        // A simple evaluator for arithmetic expressions
+        try {
+            javax.script.ScriptEngineManager mgr = new javax.script.ScriptEngineManager();
+            javax.script.ScriptEngine engine = mgr.getEngineByName("JavaScript");
+            return ((Number) engine.eval(expression)).doubleValue();
+        } catch (Exception e) {
+            throw new RuntimeException("Error evaluating expression: " + expression, e);
+        }
+    }
+}
 
                          
         
